@@ -49,6 +49,16 @@ CREATE TABLE pub_phone
 	 FOREIGN KEY (P_ID) REFERENCES publisher
 	);
 	
+CREATE TABLE pub_pay
+	(P_ID 						INT NOT NULL,
+	 year								NUMERIC(4,0) default 2020,
+	 month							NUMERIC(2,0) check (month >= 1 AND month <= 12 ) default 1,
+	 day								NUMERIC(2,0) check (day >= 1 AND day <= 31 ) default 1,
+	 pay_amount					NUMERIC(6,0) check (pay_amount >= 0) default 0,
+	 PRIMARY KEY (P_ID,year, month, day),
+	 FOREIGN KEY (P_ID) REFERENCES publisher
+	);	
+	
 CREATE TABLE order
 	(O_ID 							SERIAL UNIQUE,
 	 year								NUMERIC(4,0) default 2020,
@@ -60,7 +70,7 @@ CREATE TABLE order
 	 shipping_A_ID			INT NOT NULL,
 	 PRIMARY KEY (O_ID),
 	 FOREIGN KEY (billing_A_ID) REFERENCES address (P_ID),
-	 FOREIGN KEY (shipping_A_ID) REFERENCES address (P_ID),
+	 FOREIGN KEY (shipping_A_ID) REFERENCES address (P_ID)
 	);
 
 CREATE TABLE address
@@ -70,7 +80,7 @@ CREATE TABLE address
 	 apt_number				VARCHAR(6),
 	 city							VARCHAR(50) NOT NULL,
 	 province					VARCHAR(50) NOT NULL,
-	 PRIMARY KEY (A_ID),
+	 PRIMARY KEY (A_ID)
 	);
 
 CREATE TABLE postal
@@ -80,6 +90,7 @@ CREATE TABLE postal
 	 province					VARCHAR(50) NOT NULL,
 	 postal_code			VARCHAR(6) NOT NULL,
 	 PRIMARY KEY (street_number, street_name, city, province),
+	 FOREIGN KEY (street_number, street_name, city, province) REFERENCES address
 	);
 	
 CREATE TABLE add_to_cart
@@ -88,4 +99,5 @@ CREATE TABLE add_to_cart
 	 quantity 	NUMERIC(3,0) check (quantity >= 1) default 1,
 	 PRIMARY KEY (C_ID, ISBN),
 	 FOREIGN KEY (C_ID) REFERENCES cart,
-	 FOREIGN KEY (ISBN) REFERENCES book,
+	 FOREIGN KEY (ISBN) REFERENCES book
+	);
